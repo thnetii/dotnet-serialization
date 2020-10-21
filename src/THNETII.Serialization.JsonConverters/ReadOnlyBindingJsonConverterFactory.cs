@@ -1,13 +1,21 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace System.Text.Json.Serialization.Converters
+namespace THNETII.Serialization.JsonConverters
 {
     public class ReadOnlyBindingJsonConverterFactory : JsonConverterFactory
     {
         private static readonly Dictionary<Type, Type> typedConverterTypes =
             new Dictionary<Type, Type>();
+
+        public static ReadOnlyBindingJsonConverterFactory Instance { get; } =
+            new ReadOnlyBindingJsonConverterFactory();
+
+        private ReadOnlyBindingJsonConverterFactory() : base() { }
 
         public override bool CanConvert(Type typeToConvert)
         {

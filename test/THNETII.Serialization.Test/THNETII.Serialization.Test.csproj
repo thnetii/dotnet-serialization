@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\THNETII.System.Text.Json.Serialization.Converters\THNETII.System.Text.Json.Serialization.Converters.csproj" />
+    <ProjectReference Include="..\..\src\THNETII.Serialization.JsonConverters\THNETII.Serialization.JsonConverters.csproj" />
   </ItemGroup>
 
 </Project>

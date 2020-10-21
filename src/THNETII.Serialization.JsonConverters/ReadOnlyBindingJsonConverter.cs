@@ -1,12 +1,17 @@
-﻿using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace System.Text.Json.Serialization.Converters
+namespace THNETII.Serialization.JsonConverters
 {
     public class ReadOnlyBindingJsonConverter<T> : JsonConverter<T>
     {
         private static readonly Action<JsonSerializerOptions, JsonSerializerOptions> simpleShallowOptionsClone = GenerateShallowClone();
+        private static List<PropertyInfo> readOnlySerializationProperties = GetReadOnlySerializationProperties();
 
         private static Action<JsonSerializerOptions, JsonSerializerOptions> GenerateShallowClone()
         {
@@ -28,18 +33,30 @@ namespace System.Text.Json.Serialization.Converters
                 ).Compile();
         }
 
+        private static List<PropertyInfo> GetReadOnlySerializationProperties()
+        {
+            return typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi => !pi.CanWrite && pi.CanRead)
+                .Where(pi => ReadOnlyBindingJsonConverterFactory.Instance.CanConvert(pi.PropertyType))
+                .Where(pi => pi.GetCustomAttribute<JsonIgnoreAttribute>() is null)
+                .ToList();
+        }
+
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert,
             JsonSerializerOptions options)
         {
             var baseOptions = CloneOptions(options);
-
             var subReader = reader;
             var instance = (T)JsonSerializer.Deserialize(ref subReader, typeToConvert, baseOptions);
-            if (JsonDocument.TryParseValue(ref reader, out var dom))
+            if (readOnlySerializationProperties.Count > 0 &&
+                JsonDocument.TryParseValue(ref reader, out var dom))
             {
                 using (dom)
                 {
+                    foreach (var pi in readOnlySerializationProperties)
+                    {
 
+                    }
                 }
             }
 
