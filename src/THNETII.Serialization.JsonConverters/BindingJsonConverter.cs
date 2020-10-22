@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace THNETII.Serialization.JsonConverters
 {
-    public class ReadOnlyBindingJsonConverter<T> : JsonConverter<T>
+    public class BindingJsonConverter<T> : JsonConverter<T>
     {
         private static readonly Action<JsonSerializerOptions, JsonSerializerOptions> simpleShallowOptionsClone = GenerateShallowClone();
         private static List<PropertyInfo> readOnlySerializationProperties = GetReadOnlySerializationProperties();
@@ -37,7 +37,7 @@ namespace THNETII.Serialization.JsonConverters
         {
             return typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(pi => !pi.CanWrite && pi.CanRead)
-                .Where(pi => ReadOnlyBindingJsonConverterFactory.Instance.CanConvert(pi.PropertyType))
+                .Where(pi => BindingJsonConverterFactory.Instance.CanConvert(pi.PropertyType))
                 .Where(pi => pi.GetCustomAttribute<JsonIgnoreAttribute>() is null)
                 .ToList();
         }
@@ -80,8 +80,8 @@ namespace THNETII.Serialization.JsonConverters
             simpleShallowOptionsClone(clone, options);
             foreach (var conv in options.Converters)
             {
-                if (conv is ReadOnlyBindingJsonConverter<T> ||
-                    conv is ReadOnlyBindingJsonConverterFactory)
+                if (conv is BindingJsonConverter<T> ||
+                    conv is BindingJsonConverterFactory)
                     continue;
                 clone.Converters.Add(conv);
             }

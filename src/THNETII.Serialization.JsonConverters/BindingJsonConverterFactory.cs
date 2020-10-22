@@ -7,15 +7,15 @@ using System.Text.Json.Serialization;
 
 namespace THNETII.Serialization.JsonConverters
 {
-    public class ReadOnlyBindingJsonConverterFactory : JsonConverterFactory
+    public class BindingJsonConverterFactory : JsonConverterFactory
     {
         private static readonly Dictionary<Type, Type> typedConverterTypes =
             new Dictionary<Type, Type>();
 
-        public static ReadOnlyBindingJsonConverterFactory Instance { get; } =
-            new ReadOnlyBindingJsonConverterFactory();
+        public static BindingJsonConverterFactory Instance { get; } =
+            new BindingJsonConverterFactory();
 
-        private ReadOnlyBindingJsonConverterFactory() : base() { }
+        private BindingJsonConverterFactory() : base() { }
 
         public override bool CanConvert(Type typeToConvert)
         {
@@ -53,7 +53,7 @@ namespace THNETII.Serialization.JsonConverters
                     return converterType;
             }
 
-            converterType = typeof(ReadOnlyBindingJsonConverter<>)
+            converterType = typeof(BindingJsonConverter<>)
                 .MakeGenericType(typeToConvert);
             lock (typedConverterTypes)
             {

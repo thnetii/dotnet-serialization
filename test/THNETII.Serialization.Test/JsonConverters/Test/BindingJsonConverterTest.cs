@@ -6,11 +6,11 @@ using Xunit;
 
 namespace THNETII.Serialization.JsonConverters.Test
 {
-    public static class ReadOnlyBindingJsonConverterTest
+    public static class BindingJsonConverterTest
     {
         private static readonly JsonSerializerOptions options =
             new JsonSerializerOptions
-            { Converters = { ReadOnlyBindingJsonConverterFactory.Instance } };
+            { Converters = { BindingJsonConverterFactory.Instance } };
 
         public class TestClass1
         {
